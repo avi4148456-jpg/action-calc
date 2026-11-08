@@ -123,6 +123,9 @@ body.dark{background:var(--ink)}
 .field input,.field textarea{width:100%;padding:6px 0 8px;border:0;border-bottom:1px solid #444;background:transparent;color:var(--white);font-size:16px;font-family:inherit;direction:rtl;outline:none;border-radius:0}
 .field input:focus,.field textarea:focus{border-bottom-color:var(--mint)}
 .field input[type=tel],.field input[type=email]{direction:ltr;text-align:right}
+/* browser autofill paints a light box: keep the dark card */
+.field input:-webkit-autofill,.field input:-webkit-autofill:hover,.field input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px #0e0e0e inset;box-shadow:0 0 0 1000px #0e0e0e inset;-webkit-text-fill-color:var(--white);caret-color:var(--white);transition:background-color 99999s}
+.field input:autofill{background:transparent}
 .field textarea{resize:none;height:34px;overflow:hidden}
 .field.err input{border-bottom-color:#ff6b6b}
 .send{margin-top:18px;display:inline-flex;align-items:center;padding:10px 24px 8px;border-radius:99px;background:var(--mint);color:var(--ink);transition:transform .2s}
@@ -375,8 +378,8 @@ body.dark{background:var(--ink)}
             <h3><span class="t" role="img" aria-label="רוצה לשריין תאריך? משאירים פרטים"><span class="ln"><svg viewBox="0 -1000 18633.0 1330" style="--h:39.9" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gZ15" x="0"/><use href="#gZ9" x="805.0"/><use href="#gZ4" x="1087.0"/><use href="#gZ5" x="1876.0"/><use href="#gZ24" x="2577.0"/><use href="#gZ15" x="3683.0"/><use href="#gZ9" x="4488.0"/><use href="#gZ5" x="4770.0"/><use href="#gZ9" x="5453.0"/><use href="#gZ14" x="5735.0"/><use href="#gZ3" x="6512.0"/><use href="#gZ10" x="7498.0"/><use href="#gZ0" x="8648.0"/><use href="#gZ1" x="9340.0"/><use href="#gZ9" x="9980.0"/><use href="#gZ5" x="10262.0"/><use href="#gZ14" x="10963.0"/><use href="#gZ13" x="11743.0"/><use href="#gZ19" x="12974.0"/><use href="#gZ9" x="13258.0"/><use href="#gZ9" x="13540.0"/><use href="#gZ5" x="13822.0"/><use href="#gZ3" x="14517.0"/><use href="#gZ2" x="15503.0"/><use href="#gZ7" x="16143.0"/><use href="#gZ12" x="16947.0"/><use href="#gZ16" x="17648.0"/><use href="#gZ5" x="17932.0"/></g></svg></span></span></h3>
             <div class="fields">
               <label class="field" id="f-name"><span class="t" role="img" aria-label="שם מלא"><span class="ln"><svg viewBox="0 -1000 3866.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB2" x="0"/><use href="#gB1" x="698.0"/><use href="#gB7" x="1279.0"/><use href="#gB21" x="2334.0"/><use href="#gB3" x="3053.0"/></g></svg></span></span><input name="name" autocomplete="name" required></label>
-              <label class="field" id="f-phone"><span class="t" role="img" aria-label="טלפון"><span class="ln"><svg viewBox="0 -1000 2440.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB22" x="0"/><use href="#gB5" x="259.0"/><use href="#gB28" x="518.0"/><use href="#gB1" x="1144.0"/><use href="#gB15" x="1726.0"/></g></svg></span></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required></label>
-              <label class="field"><span class="t" role="img" aria-label="אימייל (לא חובה)"><span class="ln"><svg viewBox="0 -1000 7626.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB36" x="0"/><use href="#gB0" x="339.0"/><use href="#gB9" x="1026.0"/><use href="#gB5" x="1686.0"/><use href="#gB11" x="1945.0"/><use href="#gB2" x="2960.0"/><use href="#gB1" x="3658.0"/><use href="#gB37" x="4239.0"/><use href="#gB1" x="4878.0"/><use href="#gB10" x="5459.0"/><use href="#gB10" x="5700.0"/><use href="#gB7" x="5944.0"/><use href="#gB10" x="6699.0"/><use href="#gB2" x="6927.0"/></g></svg></span></span><input name="email" type="email" autocomplete="email"></label>
+              <label class="field" id="f-email"><span class="t" role="img" aria-label="אימייל"><span class="ln"><svg viewBox="0 -1000 2748.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB1" x="0"/><use href="#gB10" x="581.0"/><use href="#gB10" x="822.0"/><use href="#gB7" x="1066.0"/><use href="#gB10" x="1821.0"/><use href="#gB2" x="2049.0"/></g></svg></span></span><input name="email" type="email" autocomplete="email" required></label>
+              <label class="field"><span class="t" role="img" aria-label="טלפון (לא חובה)"><span class="ln"><svg viewBox="0 -1000 7318.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB36" x="0"/><use href="#gB0" x="339.0"/><use href="#gB9" x="1026.0"/><use href="#gB5" x="1686.0"/><use href="#gB11" x="1945.0"/><use href="#gB2" x="2960.0"/><use href="#gB1" x="3658.0"/><use href="#gB37" x="4239.0"/><use href="#gB22" x="4878.0"/><use href="#gB5" x="5137.0"/><use href="#gB28" x="5396.0"/><use href="#gB1" x="6022.0"/><use href="#gB15" x="6604.0"/></g></svg></span></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel"></label>
               <label class="field"><span class="t" role="img" aria-label="תאריך משוער (לא חובה)"><span class="ln"><svg viewBox="0 -1000 11106.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB36" x="0"/><use href="#gB0" x="339.0"/><use href="#gB9" x="1026.0"/><use href="#gB5" x="1686.0"/><use href="#gB11" x="1945.0"/><use href="#gB2" x="2960.0"/><use href="#gB1" x="3658.0"/><use href="#gB37" x="4239.0"/><use href="#gB14" x="4878.0"/><use href="#gB27" x="5469.0"/><use href="#gB5" x="6133.0"/><use href="#gB3" x="6392.0"/><use href="#gB7" x="7205.0"/><use href="#gB4" x="8260.0"/><use href="#gB10" x="8823.0"/><use href="#gB14" x="9067.0"/><use href="#gB2" x="9665.0"/><use href="#gB6" x="10350.0"/></g></svg></span></span><input name="date"></label>
               <label class="field full"><span class="t" role="img" aria-label="משהו שחשוב לדעת? (לא חובה)"><span class="ln"><svg viewBox="0 -1000 14473.0 1330" style="--h:16.08" aria-hidden="true"><g transform="scale(1,-1)"><use href="#gB36" x="0"/><use href="#gB0" x="339.0"/><use href="#gB9" x="1026.0"/><use href="#gB5" x="1686.0"/><use href="#gB11" x="1945.0"/><use href="#gB2" x="2960.0"/><use href="#gB1" x="3658.0"/><use href="#gB37" x="4239.0"/><use href="#gB29" x="4878.0"/><use href="#gB6" x="5455.0"/><use href="#gB27" x="6191.0"/><use href="#gB13" x="6858.0"/><use href="#gB1" x="7517.0"/><use href="#gB9" x="8398.0"/><use href="#gB5" x="9058.0"/><use href="#gB3" x="9317.0"/><use href="#gB11" x="10130.0"/><use href="#gB3" x="10840.0"/><use href="#gB5" x="11953.0"/><use href="#gB0" x="12212.0"/><use href="#gB3" x="12905.0"/><use href="#gB7" x="13718.0"/></g></svg></span></span><textarea name="note"></textarea></label>
             </div>
@@ -582,9 +585,9 @@ const LABEL = {
 $("#lead").addEventListener("submit", async e => {
   e.preventDefault();
   const f = new FormData(e.target), v = k => (f.get(k) || "").trim();
-  const okName = v("name").length > 1, okPhone = v("phone").replace(/\D/g, "").length >= 9;
-  $("#f-name").classList.toggle("err", !okName); $("#f-phone").classList.toggle("err", !okPhone);
-  if (!okName || !okPhone) return;
+  const okName = v("name").length > 1, okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v("email"));
+  $("#f-name").classList.toggle("err", !okName); $("#f-email").classList.toggle("err", !okEmail);
+  if (!okName || !okEmail) return;
   const { total, rows, disc } = calc();
   /* price breakdown: only in the email to me, never on the client's screen */
   const money = r => { const [a, b] = r.map(x => Math.abs(Math.round(x))).sort((x, y) => x - y); return (r[0] < 0 ? "מינוס " : "") + (a === b ? `${fmt(a)} ₪` : `${fmt(a)}–${fmt(b)} ₪`); };
@@ -599,7 +602,7 @@ $("#lead").addEventListener("submit", async e => {
   breakdown["תמחור · סה״כ לפני הוזלה"] = money(sum.map(x => Math.max(PRICES.projectMin, x)));
   if (PRICES.overall !== 1) breakdown[`תמחור · הוזלה כללית (${Math.round((1 - PRICES.overall)*100)}%)`] = "כלולה בטווח, מעוגל ל-50";
   const data = {
-    "שם": v("name"), "טלפון": v("phone"), "אימייל": v("email") || "-",
+    "שם": v("name"), "אימייל": v("email"), "טלפון": v("phone") || "-",
     "טווח מחיר": `${fmt(total[0])}–${fmt(total[1])} ₪`,
     "סוג צילום": LABEL.type[S.type] + (S.type === "other" ? `: ${S.other}` : ""), "אורך (דקות)": S.minutes,
     "ימי צילום": S.days, "שעות ביום": S.hours,
