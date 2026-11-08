@@ -469,7 +469,8 @@ function calc(){
   const real = !fix && S.style === "real", ch = !fix && S.char === "yes";
   const mult = 1 + (real ? P.realistic : 0) + (ch ? P.character : 0);
   const disc = tier(img ? P.imgDiscount : P.secDiscount, n);
-  const tot = [0,0];
+  const tot = [0,0], parts = {};
+  const put = (key, i, val) => (parts[key] ||= [0,0])[i] = val;
   for (const i of [0,1]){
     const speech = k === "video" ? n * P.speech[S.speech][i] : 0;
     const net = (n * rate[i] * mult + speech) * (1 - disc);
@@ -478,6 +479,10 @@ function calc(){
     const versions = S.versions * P.versionPct * net;
     const revisions = S.revisions * Math.max(P.revision.min, P.revision.pct * net);
     tot[i] = (net + voice + subs + versions + revisions) * (1 + P.urgency[S.speed]);
+    put("base", i, n * rate[i]); put("mult", i, n * rate[i] * (mult - 1)); put("speech", i, speech);
+    put("disc", i, -(n * rate[i] * mult + speech) * disc); put("voice", i, voice); put("subs", i, subs);
+    put("versions", i, versions); put("revisions", i, revisions);
+    put("speed", i, (net + voice + subs + versions + revisions) * P.urgency[S.speed]);
   }
   tot[0] = Math.floor(Math.max(P.minimum, tot[0]) / 50) * 50;
   tot[1] = Math.ceil(Math.max(P.minimum, tot[1]) / 50) * 50;
@@ -486,7 +491,7 @@ function calc(){
     voice: k === "video" && S.voice, subs: !img && S.subs, versions: S.versions > 0,
     revisions: S.revisions > 0, speed: S.speed !== "normal",
   };
-  return { total:tot, disc, rows };
+  return { total:tot, disc, rows, parts, rate, real, ch };
 }
 
 /* fixing an existing video has no characters step */
@@ -602,7 +607,20 @@ $("#lead").addEventListener("submit", async e => {
   const okName = v("name").length > 1, okPhone = v("phone").replace(/\D/g, "").length >= 9;
   $("#f-name").classList.toggle("err", !okName); $("#f-phone").classList.toggle("err", !okPhone);
   if (!okName || !okPhone) return;
-  const { total } = calc(), k = kind();
+  const { total, parts, disc, rate, real, ch } = calc(), k = kind();
+  /* price breakdown: only in the email to me, never on the client's screen */
+  const money = r => { const [a, b] = r.map(x => Math.abs(Math.round(x))).sort((x, y) => x - y); return (r[0] < 0 ? "מינוס " : "") + (a === b ? `${fmt(a)} ₪` : `${fmt(a)}–${fmt(b)} ₪`); };
+  const unit = k === "img" ? "לתמונה" : "לשנייה";
+  const NAMES = { base:`עבודה בסיסית (${fmt(rate[0])}–${fmt(rate[1])} ₪ ${unit})`,
+                  mult:"תוספת " + [real && "סגנון ריאליסטי", ch && "דמות קבועה"].filter(Boolean).join(" ו"),
+                  speech:"דיבור / דיבוב", disc:`הנחת כמות (${Math.round(disc*100)}%)`, voice:"קריינות", subs:"כתוביות",
+                  versions:"גרסאות נוספות", revisions:"סבבי תיקונים נוספים", speed:"תוספת דחיפות" };
+  const breakdown = {};
+  for (const key in NAMES){
+    const r = parts[key]; if (!r || (Math.round(r[0]) === 0 && Math.round(r[1]) === 0)) continue;
+    breakdown[`תמחור · ${NAMES[key]}`] = money(r);
+  }
+  if (total[0] <= PRICES.minimum) breakdown["תמחור · מינימום"] = `הטווח הועלה למינימום ${fmt(PRICES.minimum)} ₪`;
   const data = {
     "שם": v("name"), "טלפון": v("phone"), "אימייל": v("email") || "-",
     "טווח מחיר": `${fmt(total[0])}–${fmt(total[1])} ₪`,
@@ -615,6 +633,7 @@ $("#lead").addEventListener("submit", async e => {
     "כתוביות": k !== "img" && S.subs ? "כן" : "לא",
     "גרסאות נוספות": S.versions, "סבבי תיקונים נוספים": S.revisions,
     "אספקה": LABEL.speed[S.speed], "על הפרויקט": v("note") || "-",
+    ...breakdown,
     _subject: `פנייה חדשה ממחשבון ה-AI: ${v("name")}`, _template: "table", _captcha: "false",
   };
   if (v("email")) data._replyto = v("email");

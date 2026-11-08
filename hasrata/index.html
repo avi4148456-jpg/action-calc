@@ -585,7 +585,19 @@ $("#lead").addEventListener("submit", async e => {
   const okName = v("name").length > 1, okPhone = v("phone").replace(/\D/g, "").length >= 9;
   $("#f-name").classList.toggle("err", !okName); $("#f-phone").classList.toggle("err", !okPhone);
   if (!okName || !okPhone) return;
-  const { total } = calc();
+  const { total, rows, disc } = calc();
+  /* price breakdown: only in the email to me, never on the client's screen */
+  const money = r => { const [a, b] = r.map(x => Math.abs(Math.round(x))).sort((x, y) => x - y); return (r[0] < 0 ? "מינוס " : "") + (a === b ? `${fmt(a)} ₪` : `${fmt(a)}–${fmt(b)} ₪`); };
+  const PARTS = { shoot:"צילום", gear:"ציוד ותאורה", travel:"נסיעות", topup:"השלמה למינימום יום צילום",
+                  disc:`הנחת היקף (${Math.round(disc*100)}%)`, edit:"עריכה", script:"תסריט", subs:"כתוביות" };
+  const sum = [0,0];
+  const breakdown = {};
+  for (const k in PARTS){
+    const r = rows[k]; if (!r || (!r[0] && !r[1])) continue;
+    breakdown[`תמחור · ${PARTS[k]}`] = money(r); sum[0] += r[0]; sum[1] += r[1];
+  }
+  breakdown["תמחור · סה״כ לפני הוזלה"] = money(sum.map(x => Math.max(PRICES.projectMin, x)));
+  if (PRICES.overall !== 1) breakdown[`תמחור · הוזלה כללית (${Math.round((1 - PRICES.overall)*100)}%)`] = "כלולה בטווח, מעוגל ל-50";
   const data = {
     "שם": v("name"), "טלפון": v("phone"), "אימייל": v("email") || "-",
     "טווח מחיר": `${fmt(total[0])}–${fmt(total[1])} ₪`,
@@ -596,6 +608,7 @@ $("#lead").addEventListener("submit", async e => {
     "סאונד": SOUND_IN.includes(S.type) ? "כלול" : SOUND.includes(S.type) ? "אשת סאונד חיצונית" : "-",
     "תסריט": S.script ? "כן" : "לא", "כתוביות": S.subs ? "כן" : "לא",
     "תאריך משוער": v("date") || "-", "הערות": v("note") || "-",
+    ...breakdown,
     _subject: `פנייה חדשה מהמחשבון: ${v("name")}`, _template: "table", _captcha: "false",
   };
   if (v("email")) data._replyto = v("email");
