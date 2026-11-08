@@ -406,6 +406,8 @@ const PRICES = {
   light: { none:[0,0], basic:[150,200], full:[300,400] },      // לכל יום
   travel:{ center:[100,200], sharon:[250,350], jlm:[400,550], far:[600,800], north:[900,1200], eilat:[1500,2000] }, // הלוך ושוב, לכל יום
   editPerMin: [200, 250],   // דקת סרטון מוגמר
+  editPerMinByType: { interview:[120, 150] },  // עריכה פשוטה יותר בסוגים האלה
+  overall: 0.95,            // הוזלה כללית על כל ההצעה (1 = בלי הוזלה)
   script:     [200, 300],
   subsPerMin: [50, 50],
   // הנחת היקף על צילום וציוד: הגבוהה מבין השתיים
@@ -453,14 +455,14 @@ function calc(){
     const vals = {
       shoot: shoot*d, gear: gear*d, travel: travel*d, topup: topup*d,
       disc: -disc * (shoot + gear) * d,
-      edit: mins * P.editPerMin[i],
+      edit: mins * (P.editPerMinByType[S.type] || P.editPerMin)[i],
       script: S.script ? P.script[i] : 0,
       subs: S.subs ? mins * P.subsPerMin[i] : 0,
     };
     for (const k in vals){ (r[k] ||= [0,0])[i] = vals[k]; tot[i] += vals[k]; }
   }
-  tot[0] = Math.floor(Math.max(P.projectMin, tot[0]) / 50) * 50;
-  tot[1] = Math.ceil(Math.max(P.projectMin, tot[1]) / 50) * 50;
+  tot[0] = Math.floor(Math.max(P.projectMin, tot[0]) * P.overall / 50) * 50;
+  tot[1] = Math.ceil(Math.max(P.projectMin, tot[1]) * P.overall / 50) * 50;
   return { rows:r, total:tot, disc };
 }
 
